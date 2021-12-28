@@ -19,15 +19,19 @@ const char* mqtt_user 		  = SECRET_MQTT_User;
 const char* mqtt_password 	= SECRET_MQTT_Pass;
 
 
-#define MQTT_CONFIG_TEMP      "homeassistant/sensor/gSense/Temp/config"
-#define MQTT_CONFIG_HUMIDITY  "homeassistant/sensor/gSense/Humidity/config"
-#define MQTT_CONFIG_LIGHT     "homeassistant/sensor/gSense/Light/config"
-#define MQTT_CONFIG_PRESSURE  "homeassistant/sensor/gSense/Pressure/config"
-#define MQTT_CONFIG_NOISE     "homeassistant/sensor/gSense/Noise/config"
-#define MQTT_CONFIG_PPM       "homeassistant/sensor/gSense/PPM/config"
+#define MQTT_CONFIG_TEMP      "HA/gSense/Temp/config"
+#define MQTT_CONFIG_HUMIDITY  "HA/gSense/Humidity/config"
+#define MQTT_CONFIG_LIGHT     "HA/gSense/Light/config"
+#define MQTT_CONFIG_PRESSURE  "HA/gSense/Pressure/config"
+#define MQTT_CONFIG_NOISE     "HA/gSense/Noise/config"
+#define MQTT_CONFIG_PPM       "HA/gSense/PPM/config"
 
-#define MQTT_TOPIC_STATE      "homeassistant/sensor/gSense/state"
+#define MQTT_TOPIC_STATE      "HA/gSense/state"
 
+// Will Topic - Availability
+#define MQTT_TOPIC_WILL       "HA/gSense/status"     
+#define MQTT_OFFLINE          "Offline"
+#define MQTT_ONLINE           "Active"
 
 /**************** External Functions ************************************/
 
@@ -91,15 +95,18 @@ void MQTT_reconnect()
   if (millis()/1000 - lastReconnectAttempt > 30 || lastReconnectAttempt == 0) 
   {
       Serial.println("MQTT reconnecting");
-      if (client.connect(DeviceHostName, mqtt_user, mqtt_password)) 
-      {
+      
+      //boolean connect (clientID, [username, password], [willTopic, willQoS, willRetain, willMessage], [cleanSession])
+      if (client.connect(DeviceHostName, mqtt_user, mqtt_password, MQTT_TOPIC_WILL, 1, true, MQTT_OFFLINE)) 
+      { 
         //MQTT_publish_config_Temp();
         //MQTT_publish_config_Humidity();
         //MQTT_publish_config_Light();
         //MQTT_publish_config_Pressure();
         //MQTT_publish_config_Noise();
         //MQTT_publish_config_PPM();
-
+        client.publish(MQTT_TOPIC_WILL, MQTT_ONLINE, true);
+        
         Serial.println("MQTT connected");
       }
       lastReconnectAttempt = millis()/1000;
