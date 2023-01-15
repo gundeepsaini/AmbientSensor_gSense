@@ -8,7 +8,7 @@ void Always_loop()
 
 void Fast_Loop()
 {
-    Blynk.run();
+    //Blynk.run();
     server.handleClient();
     MQTT_loop();   
 }
@@ -46,7 +46,7 @@ void Slow_Loop()
 void VerySlow_Loop()
 {
 
-  Blynk_pushDataToGraph();
+  //Blynk_pushDataToGraph();
 }
 
 
