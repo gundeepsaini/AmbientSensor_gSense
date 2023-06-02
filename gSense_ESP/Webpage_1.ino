@@ -10,7 +10,16 @@
 void Prep_webpage1()
 {
 
-  String timeStr = timeClient.getFormattedTime();
+    // Get time
+  String timeStr;
+  struct tm timeinfo;
+  getLocalTime(&timeinfo);
+  // Convert to HH:MM:SS
+  char locTime[11];
+  sprintf(locTime, " %02d:%02d:%02d ", timeinfo.tm_hour, timeinfo.tm_min, timeinfo.tm_sec);
+  char locdate[11];
+  sprintf(locdate, " %d.%02d.%02d ", timeinfo.tm_year-100, timeinfo.tm_mon+1, timeinfo.tm_mday);
+  timeStr = String(locdate) + String(locTime);
 
     // !!! ELements that don't change !!!
   String page_head ="<!DOCTYPE html><html><head><style>td,th{ border: 1px solid #dddddd; text-align: left; padding: 8px;} tr:nth-child(even){background-color: #dddddd;}</style></head>";
